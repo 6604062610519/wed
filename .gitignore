@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Mac OS X
+.DS_Store
+
+# Virtual Environments
+venv/
+env/
+.env
+
+# PyTorch / ML Models
+*.pth
+*.pt
+*.onnx
+*.h5
+checkpoints/
+
+# Data
+data/
+
+# Logs and outputs
+log/
+results/
+*.log
+
+# IDEs
+.idea/
+.vscode/
+*.swp
