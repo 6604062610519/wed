@@ -75,7 +75,7 @@ class UNet(nn.Module):
 
     Parameters
     ----------
-    in_channels  : 27 (จำนวน feature channels)
+    in_channels  : จำนวน feature channels (ดู FEATURE_ORDER ใน normalizer.py)
     base_filters : 32 (channels ที่ encoder level 1)
     n_levels     : 4 (จำนวน encoder/decoder levels)
     dropout      : dropout rate ใน double conv blocks
@@ -140,10 +140,16 @@ def build_unet(size: str = "small", in_channels: int = 27) -> UNet:
 
 
 if __name__ == "__main__":
-    print("=== U-Net Self-test ===")
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from preprocessing.normalizer import FEATURE_ORDER
+
+    N_FEATURES = len(FEATURE_ORDER)
+    print(f"=== U-Net Self-test (in_channels={N_FEATURES} from FEATURE_ORDER) ===")
     for size in ["tiny", "small", "medium"]:
-        model = build_unet(size)
-        x     = torch.randn(2, 27, 32, 32)
+        model = build_unet(size, in_channels=N_FEATURES)
+        x     = torch.randn(2, N_FEATURES, 32, 32)
         out   = model(x)
         n_par = model.count_params()
         print(f"  [{size:6s}] {x.shape} → {out.shape} | Params: {n_par:,}")

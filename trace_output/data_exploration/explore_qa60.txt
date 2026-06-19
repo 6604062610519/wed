@@ -1,0 +1,15 @@
+/Users/nonghotdog/Projects/BotandLife/web-application/model/wed/venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:255: FutureWarning: You are using a Python version (3.10.19) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+--- 1. สรุปพิกเซล QA60 ดิบ ---
+QA60 Value:    0 | เจอทั้งหมด:   299234 พิกเซล
+
+--- 2. สรุปพิกเซล SCL (Scene Classification) ดิบ ---
+SCL Value:  8 (Clouds (Medium Prob)) | เจอทั้งหมด:        2 พิกเซล
+SCL Value:  9 (Clouds (High Prob)  ) | เจอทั้งหมด:   265485 พิกเซล
+SCL Value: 10 (Cirrus              ) | เจอทั้งหมด:    33746 พิกเซล
+
+สรุปความจริงที่โหดร้าย:
+- QA60 ของ Sentinel-2 มักจะมีปัญหา (Bug จากทาง ESA/Google) ที่มักจะให้ค่า 0 ล้วนๆ ทั้งๆ ที่มีเมฆ
+- นักวิจัยส่วนใหญ่จึงเปลี่ยนไปใช้แบนด์ SCL (Scene Classification) ในการทำ Cloud Mask แทนครับ!
+- บิตที่ 10 (ค่า 1024) = เมฆหนา (Opaque clouds)
+- บิตที่ 11 (ค่า 2048) = เมฆเซอรัส (Cirrus clouds)

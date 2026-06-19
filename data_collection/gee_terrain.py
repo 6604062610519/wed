@@ -16,7 +16,7 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import (
     get_thailand_geometry, GEE_COLLECTIONS,
-    RESOLUTION_M, TARGET_CRS_WGS84,
+    RESOLUTION_M, TARGET_CRS, TARGET_CRS_WGS84,
 )
 
 
@@ -56,6 +56,8 @@ def get_terrain(region: Optional[ee.Geometry] = None) -> ee.Image:
         region = get_thailand_geometry()
 
     dem = ee.Image(GEE_COLLECTIONS["SRTM_DEM"]).select("elevation").clip(region)
+    # Reproject to metric CRS (UTM) to ensure Slope is calculated correctly (meters/meters instead of meters/degrees)
+    dem = dem.reproject(crs=TARGET_CRS, scale=30)
 
     terrain = ee.Terrain.products(dem)  # returns elevation, slope, aspect, hillshade
 
@@ -166,7 +168,7 @@ def get_topo_diversity(region: Optional[ee.Geometry] = None) -> ee.Image:
 # Export all terrain + land cover (static, once)
 # ─────────────────────────────────────────────────────
 
-def export_static_features(drive_folder: str = "wildfire_data") -> list:
+def export_static_features(drive_folder: str = "wildfire_data_chiangmai") -> list:
     """Export all static terrain and land cover features to Google Drive."""
     region = get_thailand_geometry()
     tasks  = []
@@ -204,7 +206,7 @@ def export_static_features(drive_folder: str = "wildfire_data") -> list:
 
 if __name__ == "__main__":
     ee.Authenticate()
-    ee.Initialize(project="your-gee-project-id")  # ← เปลี่ยน project ID
+    ee.Initialize(project="bnl-wildfire")  # ← เปลี่ยน project ID
 
     export_static_features()
     print("\n✅ Terrain/LandCover export tasks submitted")

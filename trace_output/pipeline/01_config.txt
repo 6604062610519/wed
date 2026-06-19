@@ -1,0 +1,68 @@
+/Users/nonghotdog/Projects/BotandLife/web-application/model/wed/venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:255: FutureWarning: You are using a Python version (3.10.19) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+=======================================================
+  STEP 0 — Config & AOI Verification
+=======================================================
+
+───────────────────────────────────────────────────────
+  1. Thailand Bounding Box
+───────────────────────────────────────────────────────
+  Longitude : 97.5°E – 105.7°E
+  Latitude  : 5.6°N – 20.5°N
+  Δ Lon     : 8.2°
+  Δ Lat     : 14.9°
+
+───────────────────────────────────────────────────────
+  2. Grid Dimensions @ 1km Resolution
+───────────────────────────────────────────────────────
+  1km ≈ 0.00898° (at equator)
+  Grid Width  : 913 pixels
+  Grid Height : 1,659 pixels
+  Total pixels: 1,514,667 px/month
+  Memory/month: 206.0 MB  (34 features × float32)
+  Memory/year : 2471.9 MB
+
+───────────────────────────────────────────────────────
+  3. CRS Configuration
+───────────────────────────────────────────────────────
+  Export CRS (GEE): EPSG:4326  (WGS84, for GEE export)
+  Processing CRS  : EPSG:32647  (UTM Zone 47N, for slope calculation)
+  ✓ Two-CRS design: WGS84 for export, UTM for terrain derivatives
+
+───────────────────────────────────────────────────────
+  4. Time Period
+───────────────────────────────────────────────────────
+  Years           : [2023]
+  Months          : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  Total months    : 12
+  Rolling windows : [3, 7, 14] days
+  Train months    : [1,2,3,4,5,6,7]  (Jan–Jul: dry season)
+  Val months      : [8,9]             (Aug–Sep: wet season)
+  Test months     : [10,11,12]        (Oct–Dec: cool/dry start)
+
+───────────────────────────────────────────────────────
+  5. Directory Paths
+───────────────────────────────────────────────────────
+  data/raw/       : /Users/nonghotdog/Projects/BotandLife/web-application/model/wed/data/raw
+  data/interim/   : /Users/nonghotdog/Projects/BotandLife/web-application/model/wed/data/interim
+  data/processed/ : /Users/nonghotdog/Projects/BotandLife/web-application/model/wed/data/processed
+  norm_stats.json : /Users/nonghotdog/Projects/BotandLife/web-application/model/wed/data/processed/norm_stats.json
+    raw/ → ✅ exists
+    interim/ → ✅ exists
+    processed/ → ✅ exists
+
+───────────────────────────────────────────────────────
+  6. Seasonal Encoding Verification
+───────────────────────────────────────────────────────
+  Jan (DOY= 15): sin=+0.255  cos=+0.967  ⚠️  MED
+  Mar (DOY= 74): sin=+0.956  cos=+0.293  🔥 HIGH
+  Jul (DOY=196): sin=-0.230  cos=-0.973  🌧  LOW
+  Oct (DOY=288): sin=-0.970  cos=+0.243  🌧  LOW
+  Dec (DOY=349): sin=-0.272  cos=+0.962  🌧  LOW
+
+  ✓ sin ช่วงต้นปี (dry season) = positive & high → model รู้ว่าเสี่ยง
+  ✓ Continuity: Dec/Jan ค่าใกล้กัน (ไม่มี discontinuity ที่ month boundary)
+
+=======================================================
+  ✅ STEP 0 — Config Verification PASSED
+=======================================================

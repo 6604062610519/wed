@@ -130,6 +130,11 @@ class WildfireNormalizer:
         "rain_3d":              "log1p_minmax",
         "rain_7d":              "log1p_minmax",
         "rain_14d":             "log1p_minmax",
+        "soil_moisture":        "minmax",       # m³/m³, range [0, 0.5]
+
+        # Derived meteorological features
+        "vpd":                  "log1p_minmax", # kPa, right-skewed, ≥ 0
+        "drought_index":        "log1p_minmax", # T/P ratio, right-skewed, ≥ 0
 
         # Satellite
         "ndmi_s2":              "minmax",       # clipped [-1,1] → [0,1]
@@ -137,8 +142,10 @@ class WildfireNormalizer:
         "ndmi_modis":           "minmax",
         "ndvi_modis":           "minmax",
         "lst_celsius":          "zscore",       # LST spatially variable
+        "lai":                  "log1p_minmax", # Leaf Area Index, 0–7, right-skewed
         "burned_binary":        "none",         # binary
         "burned_count_3m":      "minmax",
+        "historical_fire_freq": "log1p_minmax", # count (0–120 months), right-skewed
 
         # Terrain
         "elevation":            "zscore",
@@ -146,6 +153,8 @@ class WildfireNormalizer:
         "aspect":               "none",         # ทำ sin/cos แยกใน circular_encode
         "land_cover":           "none",         # one-hot แยก
         "fire_risk_lc":         "minmax",       # 0–5
+        "dist_to_water":        "log1p_minmax", # meters, right-skewed, ≥ 0
+        "topo_diversity":       "minmax",       # diversity index, bounded [0, 1]
 
         # Human factors
         "pop_density":          "log1p_minmax",
@@ -333,13 +342,33 @@ def stack_features(normalized: Dict[str, np.ndarray],
     """
     Stack normalized feature arrays เป็น single numpy array (H, W, C)
 
+    Features ที่ขาดหายไปจะถูก **zero-fill** (ไม่ใช่ skip)
+    เพื่อให้ output shape (H, W, C) สม่ำเสมอทุกเดือน
+    → ป้องกัน DataLoader crash เมื่อ batch รวม months ที่มี features ต่างกัน
+
     Args:
         normalized: dict จาก WildfireNormalizer.transform()
         order: ลำดับ channel ที่ต้องการ
     Returns:
-        np.ndarray shape (H, W, n_channels) หรือ (n_channels,) ถ้าเป็น scalar
+        np.ndarray shape (H, W, n_channels)
     """
+    # หา reference shape จาก feature ที่มีอยู่
+    ref_shape = None
+    for feat in order:
+        if feat in normalized:
+            arr = normalized[feat]
+            if arr.ndim == 2:
+                ref_shape = arr.shape   # (H, W)
+                break
+            elif arr.ndim == 3:
+                ref_shape = arr.shape[:2]
+                break
+
+    if ref_shape is None:
+        raise ValueError("No features found in normalized dict to determine shape!")
+
     channels = []
+    missing = []
     for feat in order:
         if feat in normalized:
             arr = normalized[feat]
@@ -350,7 +379,13 @@ def stack_features(normalized: Dict[str, np.ndarray],
             else:
                 channels.append(arr)
         else:
-            print(f"  ⚠️  Feature '{feat}' not found in data, skipping")
+            # Zero-fill: สร้าง array ว่างขนาดเดียวกับ reference
+            zero = np.zeros((*ref_shape, 1), dtype=np.float32)
+            channels.append(zero)
+            missing.append(feat)
+
+    if missing:
+        print(f"  ⚠️  Zero-filled {len(missing)} missing features: {missing}")
 
     if not channels:
         raise ValueError("No features to stack!")

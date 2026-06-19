@@ -171,7 +171,7 @@ def get_monthly_weather(year: int, month: int,
 # ─────────────────────────────────────────────────────
 
 def export_monthly_weather(year: int, month: int,
-                           drive_folder: str = "wildfire_data") -> list:
+                           drive_folder: str = "wildfire_data_chiangmai") -> list:
     """Export monthly weather stack to Google Drive."""
     region = get_thailand_geometry()
     print(f"\n📡 Fetching weather: {year}-{month:02d}")
@@ -186,7 +186,7 @@ def export_monthly_weather(year: int, month: int,
 # ─────────────────────────────────────────────────────
 if __name__ == "__main__":
     ee.Authenticate()
-    ee.Initialize(project="your-gee-project-id")  # ← เปลี่ยน project ID
+    ee.Initialize(project="bnl-wildfire")  # ← เปลี่ยน project ID
 
     for month in MONTHS:
         export_monthly_weather(YEARS[-1], month)

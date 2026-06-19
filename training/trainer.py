@@ -161,9 +161,8 @@ class WildfireTrainer:
             train_m = self.train_epoch(train_loader)
             val_m   = self.eval_epoch(val_loader, prefix="val")
 
-            # Update best threshold (บน val set)
-            all_probs  = np.concatenate([t.all_probs  for t in []])   # เก็บใน tracker
-            val_f1     = val_m.get("val_f1", 0)
+            # val_f1 และ best threshold ถูกคำนวณใน MetricsTracker ของ eval_epoch()
+            val_f1 = val_m.get("val_f1", 0)
 
             # LR scheduler
             if self.scheduler is not None:

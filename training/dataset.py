@@ -10,11 +10,15 @@ Patch-based dataset สำหรับ wildfire prediction
 """
 
 import os
+import sys
 import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
 from pathlib import Path
 from typing import List, Tuple, Optional
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from config import YEARS as _CONFIG_YEARS
 
 
 # ─────────────────────────────────────────────────────
@@ -94,10 +98,12 @@ class WildfireDataset(Dataset):
     seed        : random seed
     """
 
-    def __init__(self, data_dir: str, months: List[int], years: List[int] = [2021, 2022, 2023],
+    def __init__(self, data_dir: str, months: List[int], years: List[int] = None,
                  patch_size: int = 32, stride: Optional[int] = None,
                  oversample: bool = True, augment: bool = False,
                  seed: int = 42):
+        if years is None:
+            years = _CONFIG_YEARS
         self.patch_size = patch_size
         self.augment    = augment
         self.rng        = np.random.default_rng(seed)
@@ -172,9 +178,11 @@ class WildfireSequenceDataset(Dataset):
     """
 
     def __init__(self, data_dir: str, months: List[int],
-                 years: List[int] = [2021, 2022, 2023], T: int = 3,
+                 years: List[int] = None, T: int = 3,
                  patch_size: int = 32, stride: Optional[int] = None,
                  oversample: bool = True, seed: int = 42):
+        if years is None:
+            years = _CONFIG_YEARS
         self.T          = T
         self.patch_size = patch_size
         self.rng        = np.random.default_rng(seed)
@@ -268,13 +276,15 @@ class WildfireSequenceDataset(Dataset):
 # ─────────────────────────────────────────────────────
 
 def load_pixel_data(data_dir: str, months: List[int],
-                    years: List[int] = [2021, 2022, 2023],
+                    years: List[int] = None,
                     sample_frac: float = 0.1,
                     seed: int = 42) -> Tuple[np.ndarray, np.ndarray]:
     """
     โหลดข้อมูลเป็น pixel-level arrays สำหรับ Random Forest
     returns: X (N, 27), y (N,)
     """
+    if years is None:
+        years = _CONFIG_YEARS
     rng = np.random.default_rng(seed)
     all_X, all_y = [], []
 
@@ -312,13 +322,15 @@ def load_pixel_data(data_dir: str, months: List[int],
 # DataLoader factory
 # ─────────────────────────────────────────────────────
 
-def make_loaders(data_dir: str, years: List[int] = [2021, 2022, 2023],
+def make_loaders(data_dir: str, years: List[int] = None,
                  train_months=(1,2,3,4,5,6,7),
                  val_months=(8,9),
                  test_months=(10,11,12),
                  patch_size: int = 32,
                  batch_size: int = 64,
                  num_workers: int = 0) -> dict:
+    if years is None:
+        years = _CONFIG_YEARS
     train_ds = WildfireDataset(data_dir, list(train_months), years,
                                patch_size=patch_size, oversample=True,
                                augment=True, seed=42)

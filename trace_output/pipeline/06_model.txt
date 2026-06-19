@@ -1,0 +1,57 @@
+=======================================================
+  STEP 6 — Model Architecture Verification
+  in_channels = 34  (from FEATURE_ORDER)
+=======================================================
+
+───────────────────────────────────────────────────────
+  1. FEATURE_ORDER → in_channels
+───────────────────────────────────────────────────────
+  len(FEATURE_ORDER) = 34
+  Feature groups:
+  Weather (14): ['temperature', 'relative_humidity', 'wind_speed', 'wind_u', 'wind_v', 'wind_dir_sin', 'wind_dir_cos', 'precipitation', 'rain_3d', 'rain_7d', 'rain_14d', 'soil_moisture', 'vpd', 'drought_index']
+  Satellite (7): ['ndmi_s2', 'ndvi_s2', 'lst_celsius', 'lai', 'burned_binary', 'burned_count_3m', 'historical_fire_freq']
+  Terrain (7): ['elevation', 'slope', 'aspect_sin', 'aspect_cos', 'fire_risk_lc', 'dist_to_water', 'topo_diversity']
+  Human (4): ['pop_density', 'dist_to_road', 'dist_to_settlement', 'night_light']
+  Seasonal (2): ['season_sin', 'season_cos']
+
+───────────────────────────────────────────────────────
+  2. Model Architecture — U-Net Forward Pass
+───────────────────────────────────────────────────────
+  Input  : (4, 34, 32, 32)   (B, C, P, P)
+  Output : (4, 1, 32, 32)  (B, 1, P, P)  ← raw logits
+  Device : mps
+  Params : 7,771,969
+
+  ✅ Forward pass OK: (4, 34, 32, 32) → (4, 1, 32, 32) | Params: 7,771,969
+
+───────────────────────────────────────────────────────
+  3. Loss Function Verification
+───────────────────────────────────────────────────────
+  Fire pixels: 94 / 4096 (2.3%)
+
+  bce            : random=0.9941  good=0.6788  ✅ (good < random)
+  focal          : random=0.0921  good=0.0423  ✅ (good < random)
+  dice           : random=0.9587  good=0.9142  ✅ (good < random)
+  combined       : random=0.4388  good=0.3911  ✅ (good < random)
+
+───────────────────────────────────────────────────────
+  4. All Model Forward Passes
+───────────────────────────────────────────────────────
+  Model        In shape             Out shape                  Params  OK?
+  ------------ -------------------- -------------------- ------------  -----
+  CNN-Patch    (4, 34, 32, 32)      (4, 1, 32, 32)          1,935,937  ✅
+  U-Net        (4, 34, 32, 32)      (4, 1, 32, 32)          7,771,969  ✅
+  ResU-Net     (4, 34, 32, 32)      (4, 1, 32, 32)          7,771,969  ✅
+
+───────────────────────────────────────────────────────
+  5. Threshold Sensitivity
+───────────────────────────────────────────────────────
+  F1 at threshold=0.50 : 0.0393  (default)
+  F1 at threshold=0.20 : 0.0453  (optimal)
+  Improvement: +0.6% relative
+
+  ✅ Optimal threshold ≠ 0.5 → confirms need for threshold tuning
+
+=======================================================
+  ✅ STEP 6 — Model Verification PASSED
+=======================================================

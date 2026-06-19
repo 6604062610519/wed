@@ -16,7 +16,7 @@ import argparse
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-DRIVE_FOLDER = "wildfire_data"
+DRIVE_FOLDER = "wildfire_data_chiangmai"
 
 
 def parse_args():

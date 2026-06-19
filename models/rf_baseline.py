@@ -155,9 +155,9 @@ def train_rf_baseline(data_dir: str,
                       n_estimators: int = 200,
                       seed: int = 42) -> Dict:
     print("\n📊 Loading pixel data for RF...")
-    X_train, y_train = load_pixel_data(data_dir, list(train_months), year, seed=seed)
-    X_val,   y_val   = load_pixel_data(data_dir, list(val_months),   year, seed=seed)
-    X_test,  y_test  = load_pixel_data(data_dir, list(test_months),  year, seed=seed)
+    X_train, y_train = load_pixel_data(data_dir, list(train_months), years=[year], seed=seed)
+    X_val,   y_val   = load_pixel_data(data_dir, list(val_months),   years=[year], seed=seed)
+    X_test,  y_test  = load_pixel_data(data_dir, list(test_months),  years=[year], seed=seed)
 
     print(f"  Train: {X_train.shape}, Val: {X_val.shape}, Test: {X_test.shape}")
 

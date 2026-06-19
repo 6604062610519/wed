@@ -1,0 +1,127 @@
+==========================================================
+  END-TO-END SYNTHETIC PIPELINE TEST
+  2026-06-18 01:29:02
+==========================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 1 — Synthetic Raw Input Data
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Raw features : 33 keys (33 source + 2 derived + 2 seasonal)
+  Includes aspect (raw degrees) → will be expanded to sin/cos by normalizer
+  Target shape : (200, 200)  fire_rate=2.28%
+  ✅ Raw data prepared: 33 features
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 4 — Normalization (fit on train, transform all)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 Fitting normalizer on training data...
+  ✅ temperature                    → minmax  stats={'strategy': 'minmax', 'min': 15.000149726867676, 'max': 41.96741167068482}
+  ✅ relative_humidity              → minmax  stats={'strategy': 'minmax', 'min': 10.000717163085938, 'max': 94.90264436340333}
+  ✅ wind_speed                     → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 8.258746145971074e-05, 'log_max': 3.0776081133517574}
+  ✅ wind_u                         → minmax  stats={'strategy': 'minmax', 'min': -14.999802589416504, 'max': 14.971753319740296}
+  ✅ wind_v                         → minmax  stats={'strategy': 'minmax', 'min': -14.999856948852539, 'max': 14.96835244083405}
+  ✅ wind_dir_sin                   → none  stats={'strategy': 'none'}
+  ✅ wind_dir_cos                   → none  stats={'strategy': 'none'}
+  ✅ precipitation                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 1.113642867404168e-05, 'log_max': 3.5622470334027763}
+  ✅ rain_3d                        → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0003994324550350698, 'log_max': 4.215467008690991}
+  ✅ rain_7d                        → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0006227563666605738, 'log_max': 4.951955068195722}
+  ✅ rain_14d                       → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0008600498157557747, 'log_max': 5.630383872046831}
+  ✅ soil_moisture                  → minmax  stats={'strategy': 'minmax', 'min': 9.224329005519394e-06, 'max': 0.499408616155386}
+  ✅ vpd                            → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.08473430795935659, 'log_max': 2.0725838889436567}
+  ✅ drought_index                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.34888419466298776, 'log_max': 3.679296757060689}
+  ✅ ndmi_s2                        → minmax  stats={'strategy': 'minmax', 'min': -0.49999943375587463, 'max': 0.5987397879958157}
+  ✅ ndvi_s2                        → minmax  stats={'strategy': 'minmax', 'min': -0.19999225437641144, 'max': 0.8989903029799462}
+  ✅ lst_celsius                    → zscore  stats={'strategy': 'zscore', 'mean': 37.44249662800217, 'std': 10.111000847535141}
+  ✅ lai                            → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 4.5440338757175494e-05, 'log_max': 2.718520371464221}
+  ✅ burned_binary                  → none  stats={'strategy': 'none'}
+  ✅ burned_count_3m                → minmax  stats={'strategy': 'minmax', 'min': 0.0, 'max': 3.0}
+  ✅ historical_fire_freq           → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.00015917397691056335, 'log_max': 3.0625615659691654}
+  ✅ elevation                      → zscore  stats={'strategy': 'zscore', 'mean': 1301.7272358657665, 'std': 750.4615122957956}
+  ✅ slope                          → minmax  stats={'strategy': 'minmax', 'min': 0.0007996044005267322, 'max': 59.94940960693359}
+  ✅ aspect                         → none  stats={'strategy': 'none'}
+  ✅ fire_risk_lc                   → minmax  stats={'strategy': 'minmax', 'min': 0.0, 'max': 5.0}
+  ✅ dist_to_water                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.03655659299977083, 'log_max': 10.485959975895023}
+  ✅ topo_diversity                 → minmax  stats={'strategy': 'minmax', 'min': 4.050838833791204e-05, 'max': 0.999155908226967}
+  ✅ pop_density                    → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0014174312648597889, 'log_max': 7.214359818284043}
+  ✅ dist_to_road                   → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.14864122127141963, 'log_max': 10.469688661577978}
+  ✅ dist_to_settlement             → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.03389598781496601, 'log_max': 9.933867504666365}
+  ✅ night_light                    → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 2.2849700113027313e-05, 'log_max': 4.21018901575941}
+  Fit + transform time : 20.4ms
+  Normalized keys      : 34
+  (aspect expanded → aspect_sin, aspect_cos  →  +1 key)
+  ✅ Normalize OK — 34 features (includes aspect_sin/cos)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 4b — Feature Stacking → (H, W, 34)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  FEATURE_ORDER length : 34
+  Stacked shape        : (200, 200, 34)
+  Expected             : (200, 200, 34)
+  NaN count            : 0
+  Stack time           : 2.28ms
+  ✅ Stack shape correct: True
+  ✅ No NaN in stack: True
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 5 — Patch Extraction → (N, C, P, P)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Patches extracted    : 121
+  patch_size=32, stride=16
+  pf shape             : (121, 34, 32, 32)  (N, 34, 32, 32)
+  pt shape             : (121, 32, 32)  (N, 32, 32)
+  Fire patches         : 121 (100.0%)
+  ✅ Patch shape: (121, 34, 32, 32)
+  After oversample     : 121 patches (100.0% fire)
+  ✅ Oversampling OK: 100.0% fire patches
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 5b — DataLoader Batch
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Dataset size         : 121 samples
+  batch_x.shape        : (16, 34, 32, 32)  (B, C, P, P)
+  batch_y.shape        : (16, 32, 32)  (B, P, P)
+  batch_x.dtype        : torch.float32
+  batch_y unique       : [0.0, 1.0]
+  ✅ DataLoader batch shape correct: (16, 34, 32, 32)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 6 — Model Forward Pass (in_channels=34)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Device: mps
+  Input: (B=16, C=34, P=32, P=32)
+
+  Model        Output shape               Params  OK?
+  ------------ -------------------- ------------  -----
+  CNN-Patch    (16, 1, 32, 32)         1,935,937  ✅
+  U-Net        (16, 1, 32, 32)         7,771,969  ✅
+  ✅ All model forward passes OK
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  STEP 6b — Loss & Metrics Verification
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Combined Loss (random model): 0.4088
+  ✅ Loss computes without error: 0.4088
+
+  Best threshold     : 0.050
+  F1 (random model)  : 0.0471  (expected ~0 for untrained)
+  AUC-ROC            : 0.5117  (expected ~0.5 random)
+  ✅ Metrics compute OK (AUC-ROC≈0.512)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PIPELINE SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✅ Raw data prepared (33 features)
+  ✅ Normalized (34 features after aspect enc)
+  ✅ Stacked shape (H, W, 34)
+  ✅ No NaN in stacked array
+  ✅ Patch shape (N, 34, 32, 32)
+  ✅ Oversampling fire≥30%
+  ✅ DataLoader batch (B, 34, 32, 32)
+  ✅ All models forward OK
+  ✅ Loss computes
+  ✅ Metrics computes
+
+  ╔══════════════════════════════════════════════╗
+  ║   ✅ ALL CHECKS PASSED — PIPELINE IS READY   ║
+  ║   → พร้อม run กับ real data จาก GEE export   ║
+  ╚══════════════════════════════════════════════╝

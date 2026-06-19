@@ -48,21 +48,21 @@ def _export_to_drive(image: ee.Image, description: str,
 def get_population_density(year: int = 2023,
                            region: Optional[ee.Geometry] = None) -> ee.Image:
     """
-    ดึง Population Density จาก WorldPop (100m) หรือ GPWv4 (1km)
-    แนะนำ WorldPop สำหรับ Southeast Asia (มีข้อมูลดีกว่า)
+    ดึง Population Density จาก WorldPop (100m)
+    แนะนำ WorldPop สำหรับ Southeast Asia (มีข้อมูลดีกว่า GPWv4)
     """
     if region is None:
         region = get_thailand_geometry()
 
-    # WorldPop: ใช้ปีใกล้เคียง (มีทุก 5 ปี หรือรายปี ขึ้นอยู่กับ dataset)
-    # ใช้ GPWv411 ซึ่งมีปี 2000, 2005, 2010, 2015, 2020
-    available_years = [2000, 2005, 2010, 2015, 2020]
-    closest_year = min(available_years, key=lambda y: abs(y - year))
+    # WorldPop (Global Project) มีข้อมูลถึงปี 2020 เป็นส่วนใหญ่
+    target_year = min(year, 2020)
 
-    pop = ee.ImageCollection("CIESIN/GPWv411/GPW_Population_Density") \
-            .filterDate(f"{closest_year}-01-01", f"{closest_year}-12-31") \
+    # ใช้ข้อมูล WorldPop โดยกรองเอาเฉพาะประเทศไทย (country = 'THA')
+    pop = ee.ImageCollection("WorldPop/GP/100m/pop") \
+            .filter(ee.Filter.eq("country", "THA")) \
+            .filterDate(f"{target_year}-01-01", f"{target_year}-12-31") \
             .first() \
-            .select("population_density") \
+            .select("population") \
             .rename("pop_density") \
             .clip(region)
 
@@ -207,7 +207,7 @@ def _safe_export(image: ee.Image, description: str,
 
 
 def export_human_features(year: int = 2023,
-                          drive_folder: str = "wildfire_data") -> list:
+                          drive_folder: str = "wildfire_data_chiangmai") -> list:
     """Export all human factor features to Google Drive."""
     region = get_thailand_geometry()
     tasks  = []
@@ -235,7 +235,7 @@ def export_human_features(year: int = 2023,
 
 if __name__ == "__main__":
     ee.Authenticate()
-    ee.Initialize(project="your-gee-project-id")  # ← เปลี่ยน project ID
+    ee.Initialize(project="bnl-wildfire")  # ← เปลี่ยน project ID
 
     export_human_features(YEARS[-1])
     print("\n✅ Human factor export tasks submitted")

@@ -9,17 +9,32 @@ Period   : All 12 months of a configurable year
 import ee
 
 # ─────────────────────────────────────────────
-# Area of Interest — Thailand bounding box
+# Area of Interest — Chiang Mai boundary
 # ─────────────────────────────────────────────
+# Bounding box of Chiang Mai shapefile
 THAILAND_BBOX = {
-    "min_lon": 97.5,
-    "max_lon": 105.7,
-    "min_lat":  5.6,
-    "max_lat": 20.5,
+    "min_lon": 98.0098,
+    "max_lon": 99.5739,
+    "min_lat": 17.2727,
+    "max_lat": 20.1442,
 }
 
 def get_thailand_geometry() -> ee.Geometry:
-    """Return Thailand bounding box as an Earth Engine geometry."""
+    """Return Chiang Mai boundary as an Earth Engine geometry."""
+    import os
+    import json
+    
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    shp_path = os.path.join(base_dir, "shapefile", "gadm41_THA_1_ChiangMai", "gadm41_THA_1_ChiangMai.shp")
+    if os.path.exists(shp_path):
+        try:
+            import geopandas as gpd
+            gdf = gpd.read_file(shp_path)
+            geom_json = json.loads(gdf.geometry.iloc[0].to_json())
+            return ee.Geometry(geom_json)
+        except Exception as e:
+            print(f"Failed to load shapefile, falling back to BBOX: {e}")
+            
     return ee.Geometry.Rectangle([
         THAILAND_BBOX["min_lon"],
         THAILAND_BBOX["min_lat"],
@@ -37,7 +52,7 @@ TARGET_CRS_WGS84 = "EPSG:4326"
 # ─────────────────────────────────────────────
 # Time period
 # ─────────────────────────────────────────────
-YEARS       = [2023]     # Default years for multi-year dataset
+YEARS       = list(range(2018, 2024))  # [2018, 2019, 2020, 2021, 2022, 2023]
 MONTHS      = list(range(1, 13))   # [1, 2, ..., 12]  ← all 12 months
 
 # Rolling-window sizes for accumulated metrics

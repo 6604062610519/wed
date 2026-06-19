@@ -1,0 +1,65 @@
+=======================================================
+  STEP 5 — Dataset Construction Verification
+=======================================================
+
+───────────────────────────────────────────────────────
+  1. Data Dimensions
+───────────────────────────────────────────────────────
+  Feature array  : (1657, 912, 34)  (H × W × C)
+  Target array   : (1657, 912)   (H × W)  ∈ {0, 1}
+  Total pixels   : 1,511,184
+  Fire pixels    : 35,101  (2.32%)
+  No-fire pixels : 1,476,083  (97.68%)
+  Class ratio    : 1 fire : 42.1 no-fire  ← severe imbalance
+
+───────────────────────────────────────────────────────
+  2. Patch Extraction (patch_size=32, stride=16)
+───────────────────────────────────────────────────────
+  Grid: H=1657, W=912, P=32, stride=16
+  Rows of patches  : 102
+  Cols of patches  : 56
+  Total patches    : 5,712
+  Patch coverage   : 387.1% of image (overlap=50%)
+  Memory (feat)    : 795.5 MB/month  (float32)
+
+  Fire patches   : 5,712  (100.00%)
+  No-fire patches: 0  (0.00%)
+
+───────────────────────────────────────────────────────
+  3. Stratified Oversampling (target fire_ratio=0.35)
+───────────────────────────────────────────────────────
+  Before: fire=5,712 (100.00%)  no-fire=0
+  Keep no-fire: 10,608 (to reach fire_ratio=35%)
+  After:  total=5,712  fire=5,712 (100.0%)
+  ✅ Class imbalance reduced from 100.00% → 100.0% ✓
+
+───────────────────────────────────────────────────────
+  4. Time-Based Train/Val/Test Split (Anti-Leakage)
+───────────────────────────────────────────────────────
+  Split design:
+  Train : months [1, 2, 3, 4, 5, 6, 7]  (Jan–Jul, dry season)  → 7 months
+  Val   : months [8, 9]  (Aug–Sep, wet season) → 2 months
+  Test  : months [10, 11, 12] (Oct–Dec, cool start)  → 3 months
+
+  Why Time-Based (not Random)?
+  ✓ Fire pixels are spatially correlated → random split leaks neighbors
+  ✓ Seasonal pattern differs → val/test = truly unseen time periods
+  ✓ Mimics real deployment: train on past, predict future
+
+  ⚠️  Note: Val (Aug-Sep) fire rate ≈ 0% (rainy season)
+     → Val F1 will be near 0 even for good model
+     → Use Test F1 (Oct-Dec) as primary metric
+
+───────────────────────────────────────────────────────
+  5. DataLoader Batch Shape Verification
+───────────────────────────────────────────────────────
+  Dataset size      : 128 samples
+  batch_X.shape     : (16, 34, 32, 32)  ← (B, 34, 32, 32)
+  batch_y.shape     : (16, 32, 32)  ← (B, 32, 32)
+  batch_X.dtype     : torch.float32
+  batch_y unique    : [0.0, 1.0]  ← {0.0, 1.0} only ✓
+  Memory per batch  : 2176.0 KB
+
+=======================================================
+  ✅ STEP 5 — Dataset Verification PASSED
+=======================================================

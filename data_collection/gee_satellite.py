@@ -49,12 +49,16 @@ def _export_to_drive(image: ee.Image, description: str,
 
 
 def _mask_s2_clouds(image: ee.Image) -> ee.Image:
-    """Mask clouds using Sentinel-2 QA60 band."""
-    qa = image.select("QA60")
-    cloud_bit_mask  = 1 << 10
-    cirrus_bit_mask = 1 << 11
-    mask = qa.bitwiseAnd(cloud_bit_mask).eq(0) \
-             .And(qa.bitwiseAnd(cirrus_bit_mask).eq(0))
+    """Mask clouds using Sentinel-2 SCL (Scene Classification Layer) band."""
+    scl = image.select("SCL")
+    
+    # SCL values to mask out:
+    # 3: Cloud Shadows
+    # 8: Clouds (Medium Probability)
+    # 9: Clouds (High Probability)
+    # 10: Cirrus
+    mask = scl.neq(3).And(scl.neq(8)).And(scl.neq(9)).And(scl.neq(10))
+    
     return image.updateMask(mask).divide(10000)  # Scale to [0,1]
 
 
@@ -183,12 +187,12 @@ def get_lai_modis(year: int, month: int,
     lai = ee.ImageCollection("MODIS/061/MCD15A3H") \
             .filterDate(start, end) \
             .filterBounds(region) \
-            .select("Lai_500m")
+            .select("Lai")   # GEE v6.1: band name is 'Lai' (not 'Lai_500m')
 
     def scale_lai(img: ee.Image) -> ee.Image:
-        return img.multiply(0.1).rename("lai")
+        return img.multiply(0.1).toFloat().rename("lai")
 
-    monthly_mean = lai.map(scale_lai).mean().clip(region)
+    monthly_mean = lai.map(scale_lai).mean().unmask(0).clip(region)
     return monthly_mean
 
 
@@ -326,7 +330,7 @@ def _safe_export(image: ee.Image, description: str,
 
 
 def export_monthly_satellite(year: int, month: int,
-                             drive_folder: str = "wildfire_data",
+                             drive_folder: str = "wildfire_data_chiangmai",
                              use_sentinel2: bool = True) -> list:
     """Export all satellite features for a given month to Google Drive."""
     region = get_thailand_geometry()
@@ -362,7 +366,7 @@ def export_monthly_satellite(year: int, month: int,
     return tasks
 
 
-def export_annual_satellite(year: int, drive_folder: str = "wildfire_data") -> list:
+def export_annual_satellite(year: int, drive_folder: str = "wildfire_data_chiangmai") -> list:
     """Export annual satellite features (e.g., historical fire freq)."""
     region = get_thailand_geometry()
     print(f"\n📡 Fetching annual satellite features: {year}")
@@ -374,7 +378,7 @@ def export_annual_satellite(year: int, drive_folder: str = "wildfire_data") -> l
 
 if __name__ == "__main__":
     ee.Authenticate()
-    ee.Initialize(project="your-gee-project-id")  # ← เปลี่ยน project ID
+    ee.Initialize(project="bnl-wildfire")  # ← เปลี่ยน project ID
 
     for month in MONTHS:
         export_monthly_satellite(YEARS[-1], month)

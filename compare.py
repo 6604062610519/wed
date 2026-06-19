@@ -48,6 +48,7 @@ from models.unet        import build_unet
 from models.resunet     import build_resunet
 from models.convlstm    import build_convlstm
 from preprocessing.normalizer import FEATURE_ORDER
+from config import YEARS as _CONFIG_YEARS
 
 
 # ─────────────────────────────────────────────────────
@@ -57,7 +58,7 @@ from preprocessing.normalizer import FEATURE_ORDER
 TRAIN_MONTHS = list(range(1, 8))   # 1–7
 VAL_MONTHS   = [8, 9]
 TEST_MONTHS  = [10, 11, 12]
-YEARS        = [2021, 2022, 2023]
+YEARS        = _CONFIG_YEARS       # อ่านจาก config.py (อย่า hardcode)
 SEED         = 42
 
 QUICK_CONFIG = dict(n_epochs=5,  n_tune_trials=3,  patch_size=32, batch_size=64, n_estimators=50)
@@ -145,6 +146,8 @@ def run_pytorch_model(model_key: str, cfg: dict, loaders: dict,
     print(f"{'═'*55}")
 
     in_channels = len(FEATURE_ORDER)
+    assert in_channels > 0, "FEATURE_ORDER is empty!"
+    print(f"  🔢 Feature channels: {in_channels} (from FEATURE_ORDER)")
 
     if model_key == "cnn":
         model = build_cnn(size="medium", in_channels=in_channels)

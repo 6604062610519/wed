@@ -1,0 +1,12 @@
+/Users/nonghotdog/Projects/BotandLife/web-application/model/wed/venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:255: FutureWarning: You are using a Python version (3.10.19) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+--- สุ่มค่าพิกเซล MODIS LST_Day_1km ดิบ ---
+Raw Decimal: 15512 | Kelvin: 310.24 K | Celsius: 37.09 °C
+Raw Decimal: 15506 | Kelvin: 310.12 K | Celsius: 36.97 °C
+Raw Decimal: 15499 | Kelvin: 309.98 K | Celsius: 36.83 °C
+Raw Decimal: 15515 | Kelvin: 310.30 K | Celsius: 37.15 °C
+
+สรุป:
+- ค่าดิบที่ได้จาก GEE จะอยู่ในสเกลดิจิตอล (DN)
+- ต้องคูณด้วย 0.02 เพื่อเป็นองศาเคลวิน (Kelvin)
+- และลบด้วย 273.15 เพื่อเป็นองศาเซลเซียส (Celsius)

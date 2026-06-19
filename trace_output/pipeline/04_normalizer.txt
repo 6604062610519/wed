@@ -1,0 +1,147 @@
+=======================================================
+  STEP 4 — Normalization Verification
+=======================================================
+
+───────────────────────────────────────────────────────
+  1. Strategy Coverage (ทุก feature ใน FEATURE_ORDER ต้องมี strategy)
+───────────────────────────────────────────────────────
+  FEATURE_ORDER count: 34
+  STRATEGIES  count  : 35
+  Special (sin/cos)  : {'season_cos', 'aspect_cos', 'aspect_sin', 'season_sin'}
+  ✅ All features covered — no missing strategies
+
+───────────────────────────────────────────────────────
+  2. Fit Normalizer (train data)
+───────────────────────────────────────────────────────
+🔧 Fitting normalizer on training data...
+  ✅ temperature                    → minmax  stats={'strategy': 'minmax', 'min': 15.000313758850098, 'max': 41.9626741142273}
+  ✅ relative_humidity              → minmax  stats={'strategy': 'minmax', 'min': 10.013408660888672, 'max': 94.90021674346924}
+  ✅ wind_speed                     → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.00014436473237853986, 'log_max': 3.0695133231271905}
+  ✅ wind_u                         → minmax  stats={'strategy': 'minmax', 'min': -14.999834060668945, 'max': 14.960179703712464}
+  ✅ wind_v                         → minmax  stats={'strategy': 'minmax', 'min': -14.99949836730957, 'max': 14.956839490890504}
+  ✅ wind_dir_sin                   → none  stats={'strategy': 'none'}
+  ✅ wind_dir_cos                   → none  stats={'strategy': 'none'}
+  ✅ precipitation                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0006498873829873365, 'log_max': 3.607569170563037}
+  ✅ rain_3d                        → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.001287501113469009, 'log_max': 4.24710961039464}
+  ✅ rain_7d                        → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0005868357403871808, 'log_max': 4.972526391493657}
+  ✅ rain_14d                       → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.003908570917633743, 'log_max': 5.610776334090745}
+  ✅ soil_moisture                  → minmax  stats={'strategy': 'minmax', 'min': 1.3764955838269088e-05, 'max': 0.499547328799963}
+  ✅ vpd                            → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 8.533560000958207e-05, 'log_max': 2.4390908855362206}
+  ✅ drought_index                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0004915161078163687, 'log_max': 3.532838404860561}
+  ✅ ndmi_s2                        → minmax  stats={'strategy': 'minmax', 'min': -0.49998265504837036, 'max': 0.5990814049243927}
+  ✅ ndvi_s2                        → minmax  stats={'strategy': 'minmax', 'min': -0.19999277591705322, 'max': 0.8990537610054017}
+  ✅ lst_celsius                    → zscore  stats={'strategy': 'zscore', 'mean': 37.56936711670685, 'std': 10.060675498321253}
+  ✅ lai                            → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 9.55719568551088e-06, 'log_max': 2.6851519261491124}
+  ✅ burned_binary                  → none  stats={'strategy': 'none'}
+  ✅ burned_count_3m                → minmax  stats={'strategy': 'minmax', 'min': 0.0, 'max': 3.0}
+  ✅ historical_fire_freq           → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0007043072821787272, 'log_max': 3.1305776816013884}
+  ✅ elevation                      → zscore  stats={'strategy': 'zscore', 'mean': 1294.520180270902, 'std': 751.1533941524348}
+  ✅ slope                          → minmax  stats={'strategy': 'minmax', 'min': 0.0020756584126502275, 'max': 59.95510357284546}
+  ✅ aspect                         → none  stats={'strategy': 'none'}
+  ✅ fire_risk_lc                   → minmax  stats={'strategy': 'minmax', 'min': 0.0, 'max': 5.0}
+  ✅ dist_to_water                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.8548468335452274, 'log_max': 10.42432028478227}
+  ✅ topo_diversity                 → minmax  stats={'strategy': 'minmax', 'min': 1.4606622244173195e-05, 'max': 0.9989659325480461}
+  ✅ pop_density                    → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0113141391149633, 'log_max': 7.307193130384767}
+  ✅ dist_to_road                   → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.6806897852755943, 'log_max': 10.473793163237167}
+  ✅ dist_to_settlement             → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.5611349605674483, 'log_max': 9.916874486196322}
+  ✅ night_light                    → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 8.492608577117118e-05, 'log_max': 4.239520071746353}
+
+  Feature                        Strategy        Stats summary
+  ------------------------------ --------------- -------------------------
+  aspect                         none            (passthrough)
+  burned_binary                  none            (passthrough)
+  burned_count_3m                minmax          min=0.000  max=3.000
+  dist_to_road                   log1p_minmax    log_min=0.681  log_max=10.474
+  dist_to_settlement             log1p_minmax    log_min=0.561  log_max=9.917
+  dist_to_water                  log1p_minmax    log_min=0.855  log_max=10.424
+  drought_index                  log1p_minmax    log_min=0.000  log_max=3.533
+  elevation                      zscore          mean=1294.520  std=751.153
+  fire_risk_lc                   minmax          min=0.000  max=5.000
+  historical_fire_freq           log1p_minmax    log_min=0.001  log_max=3.131
+  lai                            log1p_minmax    log_min=0.000  log_max=2.685
+  lst_celsius                    zscore          mean=37.569  std=10.061
+  ndmi_s2                        minmax          min=-0.500  max=0.599
+  ndvi_s2                        minmax          min=-0.200  max=0.899
+  night_light                    log1p_minmax    log_min=0.000  log_max=4.240
+  pop_density                    log1p_minmax    log_min=0.011  log_max=7.307
+  precipitation                  log1p_minmax    log_min=0.001  log_max=3.608
+  rain_14d                       log1p_minmax    log_min=0.004  log_max=5.611
+  rain_3d                        log1p_minmax    log_min=0.001  log_max=4.247
+  rain_7d                        log1p_minmax    log_min=0.001  log_max=4.973
+  relative_humidity              minmax          min=10.013  max=94.900
+  slope                          minmax          min=0.002  max=59.955
+  soil_moisture                  minmax          min=0.000  max=0.500
+  temperature                    minmax          min=15.000  max=41.963
+  topo_diversity                 minmax          min=0.000  max=0.999
+  vpd                            log1p_minmax    log_min=0.000  log_max=2.439
+  wind_dir_cos                   none            (passthrough)
+  wind_dir_sin                   none            (passthrough)
+  wind_speed                     log1p_minmax    log_min=0.000  log_max=3.070
+  wind_u                         minmax          min=-15.000  max=14.960
+  wind_v                         minmax          min=-14.999  max=14.957
+
+───────────────────────────────────────────────────────
+  3. Transform Verification
+───────────────────────────────────────────────────────
+  Feature                      Strategy        Raw range            Norm range           OK?
+  ---------------------------- --------------- -------------------- -------------------- -----
+  temperature                  minmax          [+15.00,+41.99]  [+0.0000,+1.0000]  ✅
+  wind_speed                   log1p_minmax    [+0.00,+27.66]  [+0.0000,+1.0000]  ✅
+  lst_celsius                  zscore          [+20.01,+54.99]  [-1.7457,+1.7314]  ✅
+  burned_binary                none            [+0.00,+1.00]  [+0.0000,+1.0000]  ✅
+  wind_dir_sin                 none            [-1.00,+1.00]  [-1.0000,+0.9999]  ✅
+  vpd                          log1p_minmax    [+0.00,+14.17]  [+0.0000,+1.0000]  ✅
+  soil_moisture                minmax          [+0.00,+0.50]  [+0.0000,+1.0000]  ✅
+  dist_to_water                log1p_minmax    [+1.35,+43713.11]  [+0.0000,+1.0000]  ✅
+
+───────────────────────────────────────────────────────
+  4. Stack Features → (H, W, 34)
+───────────────────────────────────────────────────────
+  Input features  : 33
+  Normalized dict : 34 (aspect → aspect_sin/cos added)
+  FEATURE_ORDER   : 34
+  Stacked shape   : (100, 100, 34)
+  Expected        : (100, 100, 34)
+  NaN in stack    : 0
+  ✅ Shape correct : True
+  ✅ No NaN values : True
+
+───────────────────────────────────────────────────────
+  5. Data Leakage Check — Train vs Val stats must not mix
+───────────────────────────────────────────────────────
+🔧 Fitting normalizer on training data...
+  ✅ temperature                    → minmax  stats={'strategy': 'minmax', 'min': 15.000313758850098, 'max': 41.9626741142273}
+  ✅ relative_humidity              → minmax  stats={'strategy': 'minmax', 'min': 10.013408660888672, 'max': 94.90021674346924}
+  ✅ wind_speed                     → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.00014436473237853986, 'log_max': 3.0695133231271905}
+  ✅ wind_u                         → minmax  stats={'strategy': 'minmax', 'min': -14.999834060668945, 'max': 14.960179703712464}
+  ✅ wind_v                         → minmax  stats={'strategy': 'minmax', 'min': -14.99949836730957, 'max': 14.956839490890504}
+  ✅ wind_dir_sin                   → none  stats={'strategy': 'none'}
+  ✅ wind_dir_cos                   → none  stats={'strategy': 'none'}
+  ✅ precipitation                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0006498873829873365, 'log_max': 3.607569170563037}
+  ✅ rain_3d                        → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.001287501113469009, 'log_max': 4.24710961039464}
+  ✅ rain_7d                        → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0005868357403871808, 'log_max': 4.972526391493657}
+  ✅ rain_14d                       → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.003908570917633743, 'log_max': 5.610776334090745}
+  ✅ soil_moisture                  → minmax  stats={'strategy': 'minmax', 'min': 1.3764955838269088e-05, 'max': 0.499547328799963}
+  ✅ vpd                            → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 8.533560000958207e-05, 'log_max': 2.4390908855362206}
+  ✅ drought_index                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0004915161078163687, 'log_max': 3.532838404860561}
+  ✅ ndmi_s2                        → minmax  stats={'strategy': 'minmax', 'min': -0.49998265504837036, 'max': 0.5990814049243927}
+  ✅ ndvi_s2                        → minmax  stats={'strategy': 'minmax', 'min': -0.19999277591705322, 'max': 0.8990537610054017}
+  ✅ lst_celsius                    → zscore  stats={'strategy': 'zscore', 'mean': 37.56936711670685, 'std': 10.060675498321253}
+  ✅ lai                            → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 9.55719568551088e-06, 'log_max': 2.6851519261491124}
+  ✅ burned_binary                  → none  stats={'strategy': 'none'}
+  ✅ burned_count_3m                → minmax  stats={'strategy': 'minmax', 'min': 0.0, 'max': 3.0}
+  ✅ historical_fire_freq           → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0007043072821787272, 'log_max': 3.1305776816013884}
+  ✅ elevation                      → zscore  stats={'strategy': 'zscore', 'mean': 1294.520180270902, 'std': 751.1533941524348}
+  ✅ slope                          → minmax  stats={'strategy': 'minmax', 'min': 0.0020756584126502275, 'max': 59.95510357284546}
+  ✅ aspect                         → none  stats={'strategy': 'none'}
+  ✅ fire_risk_lc                   → minmax  stats={'strategy': 'minmax', 'min': 0.0, 'max': 5.0}
+  ✅ dist_to_water                  → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.8548468335452274, 'log_max': 10.42432028478227}
+  ✅ topo_diversity                 → minmax  stats={'strategy': 'minmax', 'min': 1.4606622244173195e-05, 'max': 0.9989659325480461}
+  ✅ pop_density                    → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.0113141391149633, 'log_max': 7.307193130384767}
+  ✅ dist_to_road                   → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.6806897852755943, 'log_max': 10.473793163237167}
+  ✅ dist_to_settlement             → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 0.5611349605674483, 'log_max': 9.916874486196322}
+  ✅ night_light                    → log1p_minmax  stats={'strategy': 'log1p_minmax', 'log_min': 8.492608577117118e-05, 'log_max': 4.239520071746353}
+Traceback (most recent call last):
+  File "/Users/nonghotdog/Projects/BotandLife/web-application/model/wed/trace/04_verify_normalizer.py", line 164, in <module>
+    train_stats = norm2.stats_["temperature"]
+AttributeError: 'WildfireNormalizer' object has no attribute 'stats_'. Did you mean: 'stats'?

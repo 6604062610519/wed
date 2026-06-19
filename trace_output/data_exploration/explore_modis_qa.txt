@@ -1,0 +1,8 @@
+/Users/nonghotdog/Projects/BotandLife/web-application/model/wed/venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:255: FutureWarning: You are using a Python version (3.10.19) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2026-10-04). Please upgrade to the latest Python version, or at least Python 3.11, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+--- สุ่มค่าพิกเซล MODIS StateQA ดิบ ---
+Decimal:  1032 | Binary:    0b10000001000 | Bit 0-1 (Cloud State): 0 -> Clear
+
+สรุป:
+- ในฟังก์ชัน _mask_modis_clouds เราใช้ qa.bitwiseAnd(3).neq(0)
+- แปลว่าถ้าบิต 0-1 ไม่เท่ากับ 0 (Clear) จะถือว่าเป็นเมฆทั้งหมด (Cloudy หรือ Mixed)

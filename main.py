@@ -77,6 +77,10 @@ def step_export(year: int, gee_project: str, drive_folder: str):
     all_tasks += export_static_features(drive_folder)
     all_tasks += export_human_features(year, drive_folder)
 
+    # Annual satellite features (historical fire freq)
+    from data_collection.gee_satellite import export_annual_satellite
+    all_tasks += export_annual_satellite(year, drive_folder)
+
     # Dynamic features (รายเดือน)
     print(f"\n━━━ Dynamic Features — {year} ━━━")
     for month in MONTHS:
@@ -184,12 +188,14 @@ def _load_as_named_bands(path: str, stem: str,
     return result
 
 
-def step_normalize(train_months: list = [1, 2, 3, 4, 5, 6]):
+def step_normalize(train_months: list = list(range(1, 8))):
     """
     Load aligned rasters (interim/), compute normalization stats,
     transform all features, save to processed/ as .npy files.
 
     ใช้ train_months เพื่อ fit normalizer stats (ป้องกัน data leakage)
+    Default: months 1-7 (Jan-Jul = dry season + early wet season)
+      → Val months 8-9, Test months 10-12 จะ reuse train stats
     """
     import datetime
     print("\n━━━ Loading Aligned Data ━━━")
@@ -368,14 +374,14 @@ def parse_args():
     parser.add_argument("--step", choices=["export", "align", "normalize", "all_local"],
                         default="all_local",
                         help="Pipeline step to run")
-    parser.add_argument("--year", type=int, default=YEARS[-1],
-                        help="Year to process (for export step)")
-    parser.add_argument("--gee-project", type=str, default="your-gee-project-id",
+    parser.add_argument("--year", type=str, default="all",
+                        help="Year to process (e.g. 2023) or 'all' to process all YEARS in config")
+    parser.add_argument("--gee-project", type=str, default="bnl-wildfire",
                         help="Google Earth Engine project ID")
-    parser.add_argument("--drive-folder", type=str, default="wildfire_data",
+    parser.add_argument("--drive-folder", type=str, default="wildfire_data_chiangmai",
                         help="Google Drive folder name for GEE exports")
-    parser.add_argument("--train-months", type=str, default="1,2,3,4,5,6",
-                        help="Comma-separated months for fitting normalizer (e.g. '1,2,3')")
+    parser.add_argument("--train-months", type=str, default="1,2,3,4,5,6,7",
+                        help="Comma-separated months for fitting normalizer (default: 1-7 = Jan-Jul)")
     return parser.parse_args()
 
 
@@ -389,7 +395,11 @@ if __name__ == "__main__":
     print(f"   Train months: {train_months}")
 
     if args.step == "export":
-        step_export(args.year, args.gee_project, args.drive_folder)
+        if args.year.lower() == "all":
+            for y in YEARS:
+                step_export(y, args.gee_project, args.drive_folder)
+        else:
+            step_export(int(args.year), args.gee_project, args.drive_folder)
 
     elif args.step == "align":
         step_align()
